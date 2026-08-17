@@ -1,4 +1,3 @@
-#README FOR GITHUB
 
 # 🤖 MINI TBB
 
