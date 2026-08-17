@@ -1,669 +1,487 @@
 # 🤖 MINI TBB
 
+### SENSE · DECIDE · MOVE
+
 <p align="center">
-  <img src="assets/images/mini-tbb-front.jpg" alt="MINI TBB Robot" width="750">
+  <img src="assets/images/mini-tbb-front.jpg" alt="MINI TBB Robot" width="650">
 </p>
 
 <p align="center">
-  <h1 align="center">MINI TBB</h1>
+  <b>An Autonomous 2WD Obstacle Avoidance Robot</b>
 </p>
 
 <p align="center">
-  <strong>Autonomous 2WD Obstacle-Avoidance Robot</strong>
-</p>
-
-<p align="center">
-  <em>Sense • Decide • Move</em>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/ESP32-WROOM--32-blue?style=for-the-badge&logo=espressif">
-  <img src="https://img.shields.io/badge/Arduino-IDE-00979D?style=for-the-badge&logo=arduino">
-  <img src="https://img.shields.io/badge/Drive-2WD-orange?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Sensor-HC--SR04-green?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Power-18650-yellow?style=for-the-badge">
+  ESP32-WROOM-32 • HC-SR04 • Arduino IDE • Custom PCB
 </p>
 
 ---
 
-# 🛰️ PROJECT OVERVIEW
+## 📚 Table of Contents
 
-**MINI TBB** is a compact autonomous robot designed to demonstrate the fundamental principles of mobile robotics:
-
-> **Sense the environment → Make a decision → Control movement**
-
-The robot is built around an **ESP32-WROOM-32** and uses an **HC-SR04 ultrasonic sensor** to detect obstacles in its path.
-
-When powered on, MINI TBB automatically moves forward.
-
-When an obstacle appears:
-
-```text id="e0sp5t"
-                 🚧 OBSTACLE
-                      │
-                      ▼
-              ┌───────────────┐
-              │   HC-SR04     │
-              │   DETECTION   │
-              └───────┬───────┘
-                      │
-                      ▼
-               🧠 ESP32 DECISION
-                      │
-                      ▼
-                🔄 REVERSE
-                  ╱     ╲
-                 ╱       ╲
-              🔊 BEEP   💡 BLINK
-                 ╲       ╱
-                  ╲     ╱
-                      │
-                      ▼
-                 PATH CLEAR
-                      │
-                      ▼
-                  🚗 FORWARD
-```
-
-The robot continues reversing until the obstacle is no longer detected, then automatically resumes forward movement.
+* [About](#-about)
+* [Key Highlights](#-key-highlights)
+* [Hardware Components](#-hardware-components)
+* [Specifications](#-specifications)
+* [Pin Connections](#-pin-connections)
+* [How It Works](#-how-it-works)
+* [Power System](#-power-system)
+* [Motor System](#️-motor-system)
+* [Obstacle Detection](#-obstacle-detection)
+* [Buzzer & LED Indicators](#-buzzer--led-indicators)
+* [Software](#-software)
+* [Getting Started](#-getting-started)
+* [Testing](#-testing)
+* [Repository Structure](#-repository-structure)
+* [System Architecture](#️-system-architecture)
+* [License](#-license)
 
 ---
 
-# 🎯 PROJECT AT A GLANCE
+## 🤖 About
 
-<table align="center">
-<tr>
-<td align="center">
+**MINI TBB** is a compact autonomous two-wheel-drive robot designed around the **ESP32-WROOM-32** microcontroller.
 
-### 🧠
+The robot uses an **HC-SR04 ultrasonic sensor** to detect obstacles in front of it. When powered on, MINI TBB automatically begins moving forward.
 
-**CONTROLLER**
+When an obstacle is detected, the robot automatically changes direction and moves backward. During reverse movement, a buzzer provides an audible alert and an indicator LED blinks. The robot continues moving backward while the obstacle remains detected.
 
-ESP32-WROOM-32
+Once the obstacle is cleared, MINI TBB automatically resumes forward movement.
 
-</td>
+The project combines:
 
-<td align="center">
+* 🧠 ESP32 embedded control
+* 📡 Ultrasonic distance sensing
+* ⚙️ DC motor control
+* 🔋 Rechargeable battery power
+* 🔌 Custom PCB electronics
+* 🔊 Audible feedback
+* 💡 Visual status indication
+* 💻 Arduino-based programming
 
-### 📡
-
-**SENSOR**
-
-HC-SR04
-
-</td>
-
-<td align="center">
-
-### ⚙️
-
-**DRIVE**
-
-2WD
-
-</td>
-
-<td align="center">
-
-### 🔋
-
-**POWER**
-
-18650 Li-ion
-
-</td>
-</tr>
-</table>
-
-<br>
-
-<table align="center">
-<tr>
-<td align="center">
-
-🤖
-**AUTONOMOUS**
-
-</td>
-
-<td align="center">
-
-🔄
-**AUTO REVERSE**
-
-</td>
-
-<td align="center">
-
-🔊
-**BUZZER ALERT**
-
-</td>
-
-<td align="center">
-
-💡
-**LED STATUS**
-
-</td>
-</tr>
-</table>
+> **Sense → Decide → Move → Repeat**
 
 ---
 
-# ✨ CORE FEATURES
+## ⭐ Key Highlights
 
-### 🤖 Autonomous Operation
-
-MINI TBB starts moving automatically as soon as it is powered on.
-
-### 📡 Obstacle Detection
-
-The HC-SR04 continuously checks the path in front of the robot.
-
-### 🔄 Automatic Reverse
-
-When an obstacle is detected, the robot immediately changes to reverse movement.
-
-### 🔁 Persistent Response
-
-The robot continues reversing as long as the obstacle remains detected.
-
-### 🚗 Automatic Recovery
-
-Once the obstacle is cleared, the robot automatically resumes forward movement.
-
-### 🔊 Audible Feedback
-
-The buzzer operates while the robot is reversing.
-
-### 💡 Visual Feedback
-
-The obstacle indicator LED blinks during reverse movement.
-
-### 🔌 Custom Electronics
-
-A custom PCB integrates the robot's electronic connections.
+| Feature                 | Description                                            |
+| ----------------------- | ------------------------------------------------------ |
+| 🤖 Autonomous Operation | Starts moving automatically after power ON             |
+| 🚗 2WD Drive            | Uses 2 geared DC motors and 2 wheels                   |
+| 📡 Obstacle Detection   | HC-SR04 detects obstacles in front of the robot        |
+| 🔄 Automatic Reverse    | Reverses when an obstacle is detected                  |
+| 🔁 Continuous Response  | Keeps reversing while the obstacle remains detected    |
+| ▶️ Forward Recovery     | Resumes forward movement after the obstacle is cleared |
+| 🔊 Buzzer Alert         | Beeps during obstacle detection and reverse movement   |
+| 💡 LED Indicator        | Blinks during obstacle detection and reverse movement  |
+| 🧠 ESP32 Control        | ESP32-WROOM-32 manages sensing and movement            |
+| 🔌 Custom PCB           | Integrates the robot's electronic components           |
+| 🔋 Rechargeable Battery | Uses an ICR-18650 Li-ion cell                          |
+| 💻 Arduino IDE          | Programmed using Arduino IDE                           |
 
 ---
 
-# 🧠 THE MINI TBB PHILOSOPHY
+## 📦 Hardware Components
 
-```text id="x8m5vy"
-          ┌───────────────┐
-          │               │
-          │   📡 SENSE    │
-          │               │
-          └───────┬───────┘
-                  │
-                  ▼
-          ┌───────────────┐
-          │               │
-          │  🧠 DECIDE    │
-          │               │
-          └───────┬───────┘
-                  │
-                  ▼
-          ┌───────────────┐
-          │               │
-          │   ⚙️ MOVE     │
-          │               │
-          └───────┬───────┘
-                  │
-                  ▼
-          ┌───────────────┐
-          │               │
-          │   🔁 REPEAT   │
-          │               │
-          └───────┬───────┘
-                  │
-                  └───────────────► 📡
+### 🧠 Control & Electronics
+
+* **ESP32-WROOM-32** development board
+* Custom MINI TBB control PCB
+* Motor driver module
+* DC-DC power conversion module
+* USB-C charging module
+* ON/OFF power switch
+
+### 🚗 Motion System
+
+* **2 × Geared DC Motors**
+* **2 × Wheels**
+* Custom robot chassis
+
+### 📡 Sensor
+
+* **1 × HC-SR04 Ultrasonic Sensor**
+
+### 🔊 Indicators
+
+* Buzzer
+* PCB power/status LED
+* Obstacle/reverse indicator LED
+
+### 🔋 Power
+
+* **1 × ICR-18650 Li-ion Cell**
+* Nominal voltage: **3.7 V**
+* Capacity: **2200 mAh**
+* Energy: **8.14 Wh**
+
+---
+
+## 🔧 Specifications
+
+| Specification               | Details                             |
+| --------------------------- | ----------------------------------- |
+| **Project Name**            | MINI TBB                            |
+| **Robot Type**              | Autonomous Obstacle Avoidance Robot |
+| **Drive System**            | 2-Wheel Drive (2WD)                 |
+| **Drive Motors**            | 2 × Geared DC Motors                |
+| **Wheels**                  | 2                                   |
+| **Microcontroller**         | ESP32-WROOM-32                      |
+| **Ultrasonic Sensor**       | HC-SR04                             |
+| **Sensor Quantity**         | 1                                   |
+| **Programming Environment** | Arduino IDE                         |
+| **Programming Language**    | Arduino C/C++                       |
+| **Control Mode**            | Autonomous                          |
+| **Battery Type**            | ICR-18650 Li-ion                    |
+| **Battery Voltage**         | 3.7 V                               |
+| **Battery Capacity**        | 2200 mAh                            |
+| **Battery Energy**          | 8.14 Wh                             |
+| **Charging Interface**      | USB-C                               |
+| **Motor Driver**            | Motor Driver Module                 |
+| **Power Conversion**        | DC-DC Converter                     |
+| **Chassis**                 | Custom / 3D-printed                 |
+| **Obstacle Response**       | Reverse until obstacle is cleared   |
+| **Buzzer**                  | Active during reverse               |
+| **Obstacle LED**            | Blinks during reverse               |
+| **PCB LED**                 | Indicates PCB/power status          |
+
+---
+
+## 🔌 Pin Connections
+
+### 📡 HC-SR04 → ESP32
+
+| HC-SR04 Pin | Connection    |
+| ----------- | ------------- |
+| **VCC**     | 5V            |
+| **TRIG**    | ESP32 GPIO 21 |
+| **ECHO**    | ESP32 GPIO 22 |
+| **GND**     | GND           |
+
+### Sensor Wiring
+
+```text
+                 HC-SR04
+              ┌────────────┐
+              │            │
+      VCC ────┤ VCC        │──── 5V
+     TRIG ────┤ TRIG       │──── GPIO 21
+     ECHO ────┤ ECHO       │──── GPIO 22
+      GND ────┤ GND        │──── GND
+              │            │
+              └────────────┘
 ```
 
 ---
 
-# 🧩 HARDWARE
+## 🧠 How It Works
 
-## 🧠 ESP32-WROOM-32
+MINI TBB uses a simple autonomous control loop.
 
-The ESP32-WROOM-32 acts as the central controller of MINI TBB.
-
-It connects the sensing, movement, and feedback systems.
-
-```text id="1zxx4q"
-                     ESP32
-                       │
-        ┌──────────────┼──────────────┐
-        │              │              │
-        ▼              ▼              ▼
-     📡 SENSOR      ⚙️ MOTORS      🔊 / 💡
-     HC-SR04       MOTOR DRIVER     FEEDBACK
+```text
+                   ┌──────────────┐
+                   │   POWER ON   │
+                   └──────┬───────┘
+                          │
+                          ▼
+                  ┌───────────────┐
+                  │ MOVE FORWARD  │
+                  └───────┬───────┘
+                          │
+                          ▼
+                  ┌───────────────┐
+                  │    HC-SR04    │
+                  │ CHECK DISTANCE│
+                  └───────┬───────┘
+                          │
+                     Obstacle?
+                       /     \
+                     NO       YES
+                     │         │
+                     │         ▼
+                     │  ┌──────────────┐
+                     │  │ MOVE BACKWARD│
+                     │  │              │
+                     │  │ 🔊 Buzzer    │
+                     │  │ 💡 LED Blink │
+                     │  └──────┬───────┘
+                     │         │
+                     │         ▼
+                     │   Obstacle still
+                     │      present?
+                     │      /      \
+                     │    YES       NO
+                     │     │         │
+                     │     └────┐    │
+                     │          │    ▼
+                     │          │ MOVE FORWARD
+                     │          │
+                     └──────────┘
 ```
+
+### Operating Sequence
+
+1. Power ON MINI TBB.
+2. ESP32 initializes the robot.
+3. The robot starts moving forward.
+4. HC-SR04 measures the distance ahead.
+5. If the path is clear, the robot continues forward.
+6. If an obstacle is detected, the robot moves backward.
+7. The buzzer operates during reverse movement.
+8. The obstacle LED blinks.
+9. The robot continues reversing while the obstacle remains detected.
+10. When the obstacle is cleared, the robot resumes forward movement.
+11. The cycle repeats automatically.
 
 ---
 
-## 📡 HC-SR04
+## 🔋 Power System
 
-A single **HC-SR04 ultrasonic sensor** is mounted at the front of the robot.
-
-It provides distance information used to detect obstacles.
-
-### Pin Mapping
-
-| Sensor | Connection |
-| ------ | ---------- |
-| VCC    | 5V         |
-| TRIG   | GPIO 21    |
-| ECHO   | GPIO 22    |
-| GND    | GND        |
-
-```text id="5p4x3g"
-              HC-SR04
-
-         ┌───────────────┐
-         │               │
-  5V ────┤ VCC           │
- GPIO21 ─┤ TRIG          │
- GPIO22 ─┤ ECHO          │
-  GND ───┤ GND           │
-         │               │
-         └───────────────┘
-```
-
----
-
-# ⚙️ MOTION SYSTEM
-
-MINI TBB uses **two geared DC motors** and **two wheels**.
-
-```text id="nhb5jq"
-                    FRONT
-                      ▲
-                      │
-               ┌─────────────┐
-               │   HC-SR04   │
-               └─────────────┘
-
-                   ◯     ◯
-                   │     │
-                 M1       M2
-                   │     │
-                   └──┬──┘
-                      │
-                     2WD
-```
-
-### Motion States
-
-| Robot State         | Movement         |
-| ------------------- | ---------------- |
-| 🟢 Normal           | Forward          |
-| 🔴 Obstacle         | Reverse          |
-| 🔴 Obstacle remains | Continue Reverse |
-| 🟢 Path clear       | Forward          |
-
----
-
-# 🔋 POWER ARCHITECTURE
-
-MINI TBB uses one rechargeable **ICR-18650 Li-ion cell**.
+MINI TBB uses a single rechargeable **ICR-18650 Li-ion cell**.
 
 ### Battery Specifications
 
-| Parameter | Value     |
-| --------- | --------- |
-| Cell      | ICR-18650 |
-| Chemistry | Li-ion    |
-| Voltage   | 3.7 V     |
-| Capacity  | 2200 mAh  |
-| Energy    | 8.14 Wh   |
+```text
+Battery Type : Li-ion
+Cell         : ICR-18650
+Voltage      : 3.7 V
+Capacity     : 2200 mAh
+Energy       : 8.14 Wh
+```
 
-### Power System
+### Power Components
 
-```text id="bbt2jj"
-              🔌 USB-C
-                  │
-                  ▼
-        ┌───────────────────┐
-        │ Charging Module   │
-        └─────────┬─────────┘
-                  │
-                  ▼
-        ┌───────────────────┐
-        │ 🔋 ICR-18650      │
-        │ 3.7V / 2200mAh    │
-        └─────────┬─────────┘
-                  │
-                  ▼
-             🔘 SWITCH
-                  │
-                  ▼
-        ┌───────────────────┐
-        │ ⚡ DC-DC Module   │
-        └─────────┬─────────┘
-                  │
-                  ▼
-           ┌──────────────┐
-           │ MINI TBB PCB │
-           └──────┬───────┘
-                  │
-             ┌────┴────┐
-             ▼         ▼
-          🧠 ESP32   ⚙️ Motors
+* ICR-18650 Li-ion battery
+* USB-C charging module
+* ON/OFF power switch
+* DC-DC power conversion module
+* Custom PCB
+
+### Power Flow
+
+```text
+       ICR-18650 Battery
+              │
+              ▼
+       ON/OFF Switch
+              │
+              ▼
+       Power / Charging
+              │
+              ▼
+       DC-DC Conversion
+              │
+              ▼
+          MINI TBB PCB
+              │
+       ┌──────┴──────┐
+       ▼             ▼
+     ESP32       Motor Driver
+                     │
+               ┌─────┴─────┐
+               ▼           ▼
+            Motor 1     Motor 2
 ```
 
 ---
 
-# 🔌 CUSTOM PCB
+## ⚙️ Motor System
 
-MINI TBB uses a custom control PCB to connect the major electronic systems.
+MINI TBB uses a **2WD drivetrain** consisting of two geared DC motors and two wheels.
 
-### PCB Includes Connections For
+### Movement Behavior
 
-```text id="4xw8fn"
-                    CUSTOM PCB
-                         │
-       ┌─────────────────┼──────────────────┐
-       │                 │                  │
-       ▼                 ▼                  ▼
-     ESP32           Motor Driver         POWER
-       │                 │
-       │          ┌──────┴──────┐
-       │          ▼             ▼
-       │       Motor 1       Motor 2
-       │
-       ├──────────► HC-SR04
-       ├──────────► Buzzer
-       └──────────► Obstacle LED
+| Condition         | Robot Behavior    |
+| ----------------- | ----------------- |
+| Power ON          | Move forward      |
+| Clear path        | Continue forward  |
+| Obstacle detected | Move backward     |
+| Obstacle remains  | Continue backward |
+| Obstacle cleared  | Move forward      |
+
+### Drive Layout
+
+```text
+                    FRONT
+                      ▲
+                      │
+                ┌───────────┐
+                │  HC-SR04  │
+                └───────────┘
+
+                  O       O
+                  │       │
+               Motor 1  Motor 2
+                  │       │
+                  └───┬───┘
+                      │
+                    2WD
 ```
 
 ---
 
-# 🔊 FEEDBACK SYSTEM
+## 📡 Obstacle Detection
 
-## Buzzer
+The **HC-SR04 ultrasonic sensor** is mounted at the front of MINI TBB.
 
-The buzzer provides an audible signal during obstacle response.
+It measures the distance to objects ahead of the robot. The ESP32 uses this information to determine whether the robot should continue moving forward or switch to reverse movement.
 
-```text id="q9pjh0"
-Obstacle Detected
-       │
-       ▼
-    Reverse
-       │
-       ▼
- 🔊 BUZZER ACTIVE
-```
-
-## LEDs
-
-### 🔴 PCB LED
-
-Indicates the PCB's power/operating state.
-
-### 💡 Obstacle LED
-
-Blinks while an obstacle is detected and the robot is reversing.
-
-```text id="7m8y0u"
-💡 ON
- │
- ▼
-💡 OFF
- │
- ▼
-💡 ON
- │
- ▼
-💡 OFF
- │
- ▼
-   ...
+```text
+                 HC-SR04
+                    │
+                    │ Distance
+                    ▼
+              ESP32-WROOM-32
+                    │
+              Decision Logic
+                    │
+             ┌──────┴──────┐
+             │             │
+          CLEAR         OBSTACLE
+             │             │
+             ▼             ▼
+        MOVE FORWARD   MOVE BACKWARD
+                            │
+                       ┌────┴────┐
+                       │         │
+                    Buzzer    LED Blink
 ```
 
 ---
 
-# 🧠 CONTROL SYSTEM
+## 🔊 Buzzer & LED Indicators
 
-```text id="3m13v9"
-                         START
-                           │
-                           ▼
-                    INITIALIZE SYSTEM
-                           │
-                           ▼
-                     MOVE FORWARD
-                           │
-                           ▼
-                    READ HC-SR04
-                           │
-                           ▼
-                     ┌───────────┐
-                     │ OBSTACLE? │
-                     └─────┬─────┘
-                           │
-                ┌──────────┴──────────┐
-                │                     │
-               NO                    YES
-                │                     │
-                ▼                     ▼
-         MOVE FORWARD           MOVE BACKWARD
-                                      │
-                              ┌───────┴───────┐
-                              │               │
-                              ▼               ▼
-                         🔊 BUZZER       💡 LED BLINK
-                              │               │
-                              └───────┬───────┘
-                                      │
-                                      ▼
-                              CHECK DISTANCE
-                                      │
-                              ┌───────┴───────┐
-                              │               │
-                           PRESENT         CLEARED
-                              │               │
-                              │               ▼
-                              │         MOVE FORWARD
-                              │               │
-                              └───────────────┘
-```
+### 🔊 Buzzer
+
+The buzzer provides an audible indication when an obstacle is detected.
+
+It operates while MINI TBB is moving backward.
+
+### 🔴 PCB Power LED
+
+The red LED on the custom PCB indicates whether the PCB is powered/operating.
+
+### 💡 Obstacle Indicator LED
+
+A separate LED blinks when an obstacle is detected and the robot enters reverse movement.
+
+| Indicator       | Function                                     |
+| --------------- | -------------------------------------------- |
+| 🔴 PCB Red LED  | PCB / power status                           |
+| 💡 Obstacle LED | Blinks during obstacle detection and reverse |
+| 🔊 Buzzer       | Beeps during reverse movement                |
 
 ---
 
-# 🔄 STATE MODEL
+## 💻 Software
 
-MINI TBB operates primarily through two movement states.
+MINI TBB is programmed using **Arduino IDE**.
 
-### FORWARD
+### Development Platform
 
-```text id="a6l5f7"
-🟢 FORWARD
+* **Arduino IDE**
+* **ESP32-WROOM-32**
+* **Arduino C/C++**
 
-Motors   → Forward
-Buzzer   → OFF
-LED      → OFF
-Sensor   → Monitoring
-```
+### Software Responsibilities
 
-### REVERSE
+The robot firmware handles:
 
-```text id="e0e5wo"
-🔴 REVERSE
-
-Motors   → Backward
-Buzzer   → ON
-LED      → BLINK
-Sensor   → Monitoring
-```
-
-### State Transition
-
-```text id="xqv2x9"
-        ┌─────────────┐
-        │   FORWARD   │
-        └──────┬──────┘
-               │
-        Obstacle detected
-               │
-               ▼
-        ┌─────────────┐
-        │   REVERSE   │
-        └──────┬──────┘
-               │
-        Obstacle cleared
-               │
-               ▼
-        ┌─────────────┐
-        │   FORWARD   │
-        └─────────────┘
-```
+* ESP32 initialization
+* HC-SR04 distance sensing
+* Obstacle detection
+* Forward movement
+* Reverse movement
+* Motor control
+* Buzzer operation
+* Obstacle LED control
 
 ---
 
-# 💻 SOFTWARE
+## 🚀 Getting Started
 
-MINI TBB is programmed using the **Arduino IDE**.
+### 🔧 Hardware Setup
 
-### Technology Stack
+1. Assemble the MINI TBB chassis.
+2. Install the two geared DC motors.
+3. Install the two wheels.
+4. Mount the HC-SR04 at the front.
+5. Install the ESP32-WROOM-32 on the custom PCB.
+6. Connect the motor driver and motors.
+7. Connect the HC-SR04.
+8. Connect the buzzer and indicator LED.
+9. Install the ICR-18650 battery.
+10. Verify the power connections.
+11. Turn ON the robot.
 
-| Layer                   | Technology     |
-| ----------------------- | -------------- |
-| Development Environment | Arduino IDE    |
-| Controller              | ESP32-WROOM-32 |
-| Programming             | Arduino C/C++  |
-| Distance Sensor         | HC-SR04        |
-| Motor Control           | Motor Driver   |
-| Feedback                | Buzzer + LEDs  |
+### 💻 Software Setup
 
-### Firmware Responsibilities
-
-* Initialize ESP32 peripherals
-* Read HC-SR04
-* Detect obstacles
-* Control motor direction
-* Activate buzzer
-* Blink obstacle LED
-* Resume forward operation after obstacle clearance
-
----
-
-# 📋 TECHNICAL SPECIFICATIONS
-
-| Specification               | MINI TBB                |
-| --------------------------- | ----------------------- |
-| **Project Name**            | MINI TBB                |
-| **Robot Type**              | Autonomous Mobile Robot |
-| **Primary Function**        | Obstacle Avoidance      |
-| **Drive Configuration**     | 2WD                     |
-| **Motors**                  | 2 × Geared DC Motors    |
-| **Wheels**                  | 2                       |
-| **Main Controller**         | ESP32-WROOM-32          |
-| **Ultrasonic Sensor**       | HC-SR04                 |
-| **Sensor Count**            | 1                       |
-| **Programming Environment** | Arduino IDE             |
-| **Programming Language**    | Arduino C/C++           |
-| **Operating Mode**          | Autonomous              |
-| **Battery**                 | ICR-18650 Li-ion        |
-| **Battery Voltage**         | 3.7 V                   |
-| **Battery Capacity**        | 2200 mAh                |
-| **Battery Energy**          | 8.14 Wh                 |
-| **Charging**                | USB-C                   |
-| **Power Conversion**        | DC-DC                   |
-| **Main PCB**                | Custom                  |
-| **Chassis**                 | Custom / 3D-printed     |
-| **Obstacle Response**       | Reverse                 |
-| **Audible Feedback**        | Buzzer                  |
-| **Visual Feedback**         | LED                     |
+1. Install **Arduino IDE**.
+2. Install ESP32 board support.
+3. Connect the ESP32 to your computer using USB.
+4. Select the appropriate ESP32 board.
+5. Load the MINI TBB firmware.
+6. Compile the program.
+7. Upload the firmware.
+8. Disconnect USB.
+9. Power ON MINI TBB.
+10. Test the robot in an open area.
 
 ---
 
-# 🧪 TESTING
+## 🧪 Testing
 
-## 🟢 Test 01 — Startup
+### Basic Operation Test
 
-```text id="9p7u1p"
-POWER ON
+```text
+Power ON
    │
    ▼
-ESP32 START
+Robot moves forward
    │
    ▼
-🚗 FORWARD
-```
-
----
-
-## 🔴 Test 02 — Obstacle Detection
-
-```text id="9r5qyp"
-🚧 OBSTACLE
-     │
-     ▼
-📡 HC-SR04
-     │
-     ▼
-🧠 ESP32
-     │
-     ▼
-🔄 REVERSE
-     │
- ┌───┴───┐
- ▼       ▼
-🔊       💡
-BEEP    BLINK
-```
-
----
-
-## 🔄 Test 03 — Obstacle Remains
-
-```text id="7axv2p"
+Obstacle placed in front
+   │
+   ▼
+HC-SR04 detects obstacle
+   │
+   ▼
+Robot moves backward
+   │
+   ├── 🔊 Buzzer
+   │
+   └── 💡 LED Blink
+   │
+   ▼
 Obstacle remains
-       │
-       ▼
-🔄 Continue reversing
-       │
-       ▼
-🔊 Buzzer active
-       │
-       ▼
-💡 LED blinking
-```
-
----
-
-## 🟢 Test 04 — Path Clear
-
-```text id="d6c9q7"
+   │
+   ▼
+Robot continues backward
+   │
+   ▼
 Obstacle removed
-       │
-       ▼
-📡 Path clear
-       │
-       ▼
-🚗 Forward movement
+   │
+   ▼
+Robot resumes forward movement
 ```
 
----
+### Expected Behavior
 
-# 📸 MINI TBB GALLERY
-
-<p align="center">
-  <img src="assets/images/mini-tbb-front.jpg" width="45%" alt="MINI TBB Front View">
-  <img src="assets/images/mini-tbb-side.jpg" width="45%" alt="MINI TBB Side View">
-</p>
-
-<p align="center">
-  <img src="assets/images/mini-tbb-top.jpg" width="45%" alt="MINI TBB Top View">
-  <img src="assets/images/pcb.jpg" width="45%" alt="MINI TBB Custom PCB">
-</p>
+| Test Condition    | Expected Result             |
+| ----------------- | --------------------------- |
+| Power ON          | Robot starts moving forward |
+| Clear path        | Robot continues forward     |
+| Obstacle detected | Robot moves backward        |
+| Reverse movement  | Buzzer operates             |
+| Reverse movement  | Obstacle LED blinks         |
+| Obstacle remains  | Robot continues reversing   |
+| Obstacle removed  | Robot moves forward         |
 
 ---
 
-# 📁 REPOSITORY STRUCTURE
+## 📁 Repository Structure
 
-```text id="yd5zq3"
+```text
 MINI-TBB/
 │
 ├── assets/
@@ -674,8 +492,8 @@ MINI-TBB/
 │   │   └── pcb.jpg
 │   │
 │   └── diagrams/
-│       ├── architecture.png
-│       └── wiring.png
+│       ├── system-architecture.png
+│       └── wiring-diagram.png
 │
 ├── hardware/
 │   ├── pcb/
@@ -687,8 +505,8 @@ MINI-TBB/
 │       └── MINI_TBB/
 │
 ├── docs/
-│   ├── hardware/
 │   ├── assembly/
+│   ├── hardware/
 │   └── operation/
 │
 ├── LICENSE
@@ -697,69 +515,71 @@ MINI-TBB/
 
 ---
 
-# 🏁 QUICK START
+## 🏗️ System Architecture
 
-```text id="u8g3c9"
-        ┌─────────────────┐
-        │  POWER ON MINI  │
-        │      TBB        │
-        └────────┬────────┘
-                 │
-                 ▼
-            🚗 FORWARD
-                 │
-                 ▼
-            📡 DETECT
-                 │
-          ┌──────┴──────┐
-          │             │
-        CLEAR        OBSTACLE
-          │             │
-          │             ▼
-          │         🔄 REVERSE
-          │             │
-          │        🔊 + 💡
-          │             │
-          │             ▼
-          │       PATH CLEAR
-          │             │
-          └─────────────┘
-                 │
-                 ▼
-            🚗 FORWARD
+```text
+                         MINI TBB
+                            │
+             ┌──────────────┴──────────────┐
+             │                             │
+        Power System                  Sensing System
+             │                             │
+     ┌───────┴───────┐               ┌────┴────┐
+     │               │               │ HC-SR04 │
+  18650          DC-DC               │ Sensor  │
+  Battery        Converter           └────┬────┘
+     │               │                    │
+     └───────┬───────┘                    │
+             │                            │
+             ▼                            ▼
+       ┌─────────────────────────────────────┐
+       │            CUSTOM PCB               │
+       │                                     │
+       │         ESP32-WROOM-32              │
+       │                │                    │
+       │          ┌─────┴─────┐              │
+       │          │   Motor   │              │
+       │          │   Driver  │              │
+       │          └─────┬─────┘              │
+       └────────────────┼────────────────────┘
+                        │
+                ┌───────┴───────┐
+                │               │
+                ▼               ▼
+             Motor 1         Motor 2
+                │               │
+                ▼               ▼
+              Wheel           Wheel
+
+       ESP32 ───────────────► Buzzer
+       ESP32 ───────────────► Obstacle LED
+       PCB  ────────────────► Power LED
 ```
 
 ---
 
-# 📜 LICENSE
+## 📜 License
 
 This project is released under the **MIT License**.
 
-See the `LICENSE` file for complete license terms.
+See the `LICENSE` file for the complete license terms.
 
 ---
 
-# 🤖 MINI TBB
+## 🤖 MINI TBB
 
-<p align="center">
+**MINI TBB** demonstrates a simple autonomous robotics system using an **ESP32-WROOM-32**, **HC-SR04 ultrasonic sensing**, **2WD motor control**, custom electronics, rechargeable battery power, and Arduino programming.
 
-### 📡 SENSE
+The robot continuously follows a simple autonomous cycle:
 
-↓
+```text
+📡 SENSE
+   ↓
+🧠 DECIDE
+   ↓
+⚙️ MOVE
+   ↓
+🔁 REPEAT
+```
 
-### 🧠 DECIDE
-
-↓
-
-### ⚙️ MOVE
-
-↓
-
-### 🔁 REPEAT
-
-</p>
-
-<p align="center">
-  <strong>MINI TBB</strong><br>
-  <em>A compact autonomous robotics platform.</em>
-</p>
+**MINI TBB — Sense. Decide. Move.**
